@@ -11,6 +11,8 @@ import Foundation
 public class Configurator: UITableViewController {
   private static let DefaultTitle = "Configurator"
 
+  // MARK: - Initializers
+
   public static func withItemGroups(itemGroups: [ItemGroup], title: String = DefaultTitle) -> UIViewController {
     let navigationController = R.storyboard.configurator.initialViewController!
 
@@ -24,6 +26,8 @@ public class Configurator: UITableViewController {
   public static func withItems(items: [Item], title: String = DefaultTitle) -> UIViewController {
     return withItemGroups([ItemGroup(name: nil, items: items)], title: title)
   }
+
+  // MARK: - TableDataSource
 
   private var itemGroups: [ItemGroup]!
 
@@ -44,14 +48,18 @@ public class Configurator: UITableViewController {
 
     let cell = tableView.dequeueReusableCellWithIdentifier(R.reuseIdentifier.multipleChoiceCell, forIndexPath: indexPath)!
     cell.textLabel?.text = item.name
-    cell.detailTextLabel?.text = item.value.title
+    cell.detailTextLabel?.text = item.currentValue.title
 
     return cell
   }
 
+  // MARK: - TableDelegation
+
   public override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     performSegueWithIdentifier(R.segue.presentCharacteristicChoices, sender: tableView)
   }
+
+  // MARK: - UI Navigation
 
   public override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
     guard let indexPath = tableView.indexPathForSelectedRow,
@@ -62,14 +70,6 @@ public class Configurator: UITableViewController {
 
     let item = itemGroups[indexPath.section].items[indexPath.row]
     destinationViewController.item = item
-  }
-
-  private func saveChanges() {
-    itemGroups.forEach { group in
-      group.items.forEach { item in
-        item.applyValue()
-      }
-    }
   }
 
   @IBAction func unwindFromMultipleChoicePickerToConfigurator(segue: UIStoryboardSegue) {
@@ -84,10 +84,12 @@ public class Configurator: UITableViewController {
   }
 
   @IBAction func saveButtonTouched(sender: AnyObject) {
-    saveChanges()
+    saveChanges(itemGroups)
     dismissViewControllerAnimated(true, completion: nil)
   }
 }
+
+// MARK: - Helper methods
 
 private func indexPathForItem(item subject: Configurator.Item, inGroups groups: [Configurator.ItemGroup]) -> NSIndexPath? {
   for var section = 0; section < groups.count; ++section {
@@ -100,4 +102,14 @@ private func indexPathForItem(item subject: Configurator.Item, inGroups groups: 
   }
 
   return nil
+}
+
+private func saveChanges(groups: [Configurator.ItemGroup]) {
+  // TODO: Notification: ConfiguratorWillChangeCharacteristics
+  groups.forEach { group in
+    group.items.forEach { item in
+      item.applyCurrentValueToBackingValue()
+    }
+  }
+  // TODO: Notification: ConfiguratorDidChangeCharacteristics
 }

@@ -26,26 +26,24 @@ extension Configurator {
     let style: Style
     let allValues: [CharacteristicValueTuple]
 
-    private let getter: () -> CharacteristicValueTuple
-    private let setter: CharacteristicValueTuple -> ()
-    let equator: (CharacteristicValueTuple, CharacteristicValueTuple) -> Bool
+    private let getBackingValueAsTuple: () -> CharacteristicValueTuple
+    private let setBackingValueFromTuple: CharacteristicValueTuple -> ()
+    let equalValuesInTuples: (CharacteristicValueTuple, CharacteristicValueTuple) -> Bool
 
-    var value: CharacteristicValueTuple {
-      didSet {
-        hasChanged = true
-      }
+    var currentValue: CharacteristicValueTuple
+    var hasChanges: Bool {
+      return !equalValuesInTuples(getBackingValueAsTuple(), currentValue)
     }
-    var hasChanged: Bool = false
 
     public init<CharacteristicValueType>(characteristic: Characteristic<CharacteristicValueType>, name: String) {
       self.name = name
       self.style = characteristic.preferredStyle
       self.allValues = CharacteristicValueType.allValues.map { (titleForCharacteristicType($0), $0.rawValue) }
 
-      self.getter = {
+      self.getBackingValueAsTuple = {
         (titleForCharacteristicType(characteristic.currentValue), characteristic.currentValue.rawValue)
       }
-      self.setter = { _, newRawValue in
+      self.setBackingValueFromTuple = { _, newRawValue in
         guard let newRawValue = newRawValue as? CharacteristicValueType.RawValue,
           newValue = CharacteristicValueType(rawValue: newRawValue)
           else {
@@ -56,7 +54,7 @@ extension Configurator {
 
         characteristic.currentValue = newValue
       }
-      self.equator = { rhs, lhs in
+      self.equalValuesInTuples = { rhs, lhs in
         guard let rhsRawValue = rhs.value as? CharacteristicValueType.RawValue,
           lhsRawValue = lhs.value as? CharacteristicValueType.RawValue,
           rhsValue = CharacteristicValueType(rawValue: rhsRawValue),
@@ -67,17 +65,12 @@ extension Configurator {
         return rhsValue == lhsValue
       }
 
-      self.value = getter()
+      self.currentValue = getBackingValueAsTuple()
     }
 
-    func resetValue() {
-      value = getter()
-    }
-
-    func applyValue() {
-      if hasChanged {
-        setter(value)
-        hasChanged = false
+    func applyCurrentValueToBackingValue() {
+      if hasChanges {
+        setBackingValueFromTuple(currentValue)
       }
     }
   }

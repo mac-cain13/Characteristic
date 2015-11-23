@@ -10,7 +10,11 @@ import Foundation
 
 public class Characteristic<ValueType: CharacteristicType> {
   public let defaultValue: ValueType
-  public var currentValue: ValueType
+  public var currentValue: ValueType {
+    didSet {
+      // TODO: Notification: CharacteristicDidChange
+    }
+  }
 
   internal var preferredStyle: Configurator.Item.Style
 

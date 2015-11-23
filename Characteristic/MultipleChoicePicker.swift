@@ -26,13 +26,13 @@ class MultipleChoicePicker: UITableViewController {
 
     let cell = tableView.dequeueReusableCellWithIdentifier(R.reuseIdentifier.choiceCell, forIndexPath: indexPath)!
     cell.textLabel?.text = value.title
-    cell.accessoryType = item.equator(item.value, value) ? .Checkmark : .None
+    cell.accessoryType = item.equalValuesInTuples(item.currentValue, value) ? .Checkmark : .None
 
     return cell
   }
 
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-    item.value = item.allValues[indexPath.row]
+    item.currentValue = item.allValues[indexPath.row]
     performSegueWithIdentifier(R.segue.unwindFromMultipleChoicePickerToConfigurator, sender: tableView)
   }
 }
