@@ -1,10 +1,10 @@
 PODS:
-  - R.swift (0.11.0)
+  - R.swift (0.12.0)
 
 DEPENDENCIES:
   - R.swift
 
 SPEC CHECKSUMS:
-  R.swift: dfd7addf1564914d92745816b76b0563d688f387
+  R.swift: 8d8a9f0cb36462d0dff82b70cc2c0396add668fe
 
 COCOAPODS: 0.39.0
