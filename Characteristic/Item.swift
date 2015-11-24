@@ -9,10 +9,20 @@
 import Foundation
 
 extension Configurator {
+
+  // MARK: - Item group
+
   public struct ItemGroup {
     public let name: String?
     public let items: [Item]
+
+    public init(name: String?, items: [Item]) {
+      self.name = name
+      self.items = items
+    }
   }
+
+  // MARK: - Item
 
   public class Item {
     typealias CharacteristicValueTuple = (title: String, value: Any)
@@ -73,5 +83,13 @@ extension Configurator {
         setBackingValueFromTuple(currentValue)
       }
     }
+  }
+}
+
+// MARK: - ItemGroup helper
+
+extension SequenceType where Generator.Element == Configurator.Item {
+  public func group(name: String? = nil) -> Configurator.ItemGroup {
+    return Configurator.ItemGroup(name: name, items: Array(self))
   }
 }

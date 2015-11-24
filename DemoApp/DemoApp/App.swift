@@ -20,9 +20,9 @@ struct AppConfiguration {
   let bottomMap = ToggleCharacteristic(.Disabled)
 
   func createConfigurator() -> UIViewController {
-    return Configurator.withItems([
-      Configurator.Item(characteristic: bottomMap, name: "Bottom map"),
-      Configurator.Item(characteristic: env, name: "Environment"),
+    return Configurator.withItemGroups([
+      Configurator.ItemGroup(name: "Feature flags", items: [Configurator.Item(characteristic: bottomMap, name: "Bottom map")]),
+      Configurator.ItemGroup(name: "Server shizzle", items: [Configurator.Item(characteristic: env, name: "Environment")])
     ])
   }
 }
