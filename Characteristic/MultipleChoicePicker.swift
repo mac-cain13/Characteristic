@@ -17,6 +17,8 @@ class MultipleChoicePicker: UITableViewController {
     self.title = item.name
   }
 
+  // MARK: - TableDataSource
+
   override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     return item.allValues.count
   }
@@ -30,6 +32,8 @@ class MultipleChoicePicker: UITableViewController {
 
     return cell
   }
+
+  // MARK: - TableDelegation
 
   override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
     item.currentValue = item.allValues[indexPath.row]

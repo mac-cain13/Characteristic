@@ -67,7 +67,7 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="TNK-5q-lWd" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1128" y="427"/>
+            <point key="canvasLocation" x="1136" y="427"/>
         </scene>
         <!--Multiple Choice Picker-->
         <scene sceneID="p9J-Ka-5UZ">
@@ -131,7 +131,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="9f4-jq-p5r" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="316" y="427"/>
+            <point key="canvasLocation" x="424" y="427"/>
         </scene>
     </scenes>
 </document>
